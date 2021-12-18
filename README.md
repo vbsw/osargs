@@ -1,9 +1,9 @@
 # osargs
 
-[![GoDoc](https://godoc.org/github.com/vbsw/osargs?status.svg)](https://godoc.org/github.com/vbsw/osargs) [![Go Report Card](https://goreportcard.com/badge/github.com/vbsw/osargs)](https://goreportcard.com/report/github.com/vbsw/osargs) [![Stability: Experimental](https://masterminds.github.io/stability/experimental.svg)](https://masterminds.github.io/stability/experimental.html)
+[![Stability: Experimental](https://masterminds.github.io/stability/experimental.svg)](https://masterminds.github.io/stability/experimental.html)
 
 ## About
-Package osargs provides functions to parse command line arguments. It is published on <https://github.com/vbsw/osargs> and <https://gitlab.com/vbsw/osargs>.
+osargs provides functions to parse command line arguments. It is published on <https://github.com/vbsw/osargs> and <https://gitlab.com/vbsw/osargs>.
 
 ## Copyright
 Copyright 2021, Vitali Baumtrok (vbsw@mailbox.org).
@@ -16,61 +16,45 @@ osargs is distributed in the hope that it will be useful, but WITHOUT ANY WARRAN
 
 ### Example A
 
-	package main
+	auto args = new OSArgs();
+	
+	if (args->parse("--help", "-h")->isAvailable()) {
+		printf("valid parameters are -h or -v\n");
 
-	import (
-		"fmt"
-		"github.com/vbsw/osargs"
-	)
+	} else if (args->parse("--version", "-v")->isAvailable()) {
+		printf("version 1.0.0\n");
 
-	func main() {
-		args := osargs.New()
+	} else {
+		int length;
+		auto unparsedArgs = args->getUnparsedArgs(&length);
 
-		if args.Parse("--help", "-h").Available() {
-			fmt.Println("valid parameters are -h or -v.")
-
-		} else if args.Parse("--version", "-v").Available() {
-			fmt.Println("version 1.0.0")
-
-		} else {
-			unparsedArgs := args.UnparsedArgs()
-
-			if len(unparsedArgs) == 1 {
-				fmt.Println("error: unknown parameter", unparsedArgs[0])
-
-			} else if len(unparsedArgs) > 1 {
-				fmt.Println("error: too many arguments")
-			}
+		if (length == 1) {
+			printf("error: unknown parameter &ls\n", unparsedArgs[0]);
+		} else if (length > 1) {
+			printf("error: too many arguments\n");
 		}
 	}
+	delete args;
 
 ### Example B
 
-	package main
+	int start = 0;
+	int end = 0;
+	auto args = new OSArgs();
+	auto delimiter = args->newDelimiter(FALSE, FALSE, "=");
 
-	import (
-		"fmt"
-		"github.com/vbsw/osargs"
-	)
-
-	func main() {
-		start := "0"
-		end := "0"
-		args := osargs.New()
-		delimiter := osargs.NewDelimiter(false, false, "=")
-
-		startArg := args.ParsePairs(delimiter, "start")
-		endArg := args.ParsePairs(delimiter, "end")
-
-		if startArg.Available() {
-			start = startArg.Values[0]
-			end = start
-		}
-		if endArg.Available() {
-			end = endArg.Values[0]
-		}
-		fmt.Println("processing from", start, "to", end)
+	auto startArg = args->parsePairs(delimiter, "start");
+	auto endArg = args->parsePairs(delimiter, "end");
+	
+	if (startArg->isAvailable()) {
+		start = startArg->getValues()[0];
+		end = start;
 	}
+	if (startArg->isAvailable()) {
+		end = endArg->getValues()[0];
+	}
+	printf("processing from &d to &d", start, end);
+	delete args;
 
 Command line:
 
@@ -78,5 +62,4 @@ Command line:
 	$ processing from 1 to 10
 
 ## References
-- https://golang.org/doc/install
 - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
