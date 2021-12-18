@@ -6,7 +6,7 @@
  */
 
 #include "OSArgs.h"
-#include "g2d/String.h"
+#include <shellapi.h>
 
 static void copyStrsW(LPCWSTR *const srcStrings, const int srcLength, LPWSTR **strings, int **lengths, int *length)
 {
