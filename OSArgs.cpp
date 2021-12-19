@@ -197,7 +197,6 @@ OSArgs::OSArgs() : values(NULL), lengths(NULL), parsed(NULL), length(0), unparse
 	#endif // !UNICODE
 	if (argc > 1)
 		init((LPCWSTR*)&argv[1], argc - 1);
-	//init((LPCWSTR*)&argv[0], argc);
 	LocalFree(argv);
 }
 
